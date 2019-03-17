@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Home Admin page</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- endinject -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" />
+
+</head>
+<body>
+
+<div class="container-scroller">
+
+
+    <div th:replace="fragments/header_admin :: header_admin_info (vm=${vm.getLayoutHeaderAdminVM()})"></div>
+
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/product}">
+                        <span class="menu-title">Product</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/category}">
+                        <span class="menu-title">Category</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/order}">
+                        <span class="menu-title">Order</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h1>Order Management</h1>
+                    <form class="form-inline my-2 my-lg-0" th:action="@{/admin/order}" th:object="${orderName}" method="get">
+                        <input class="form-control mr-sm-2" th:field="*{customerName}" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </form>
+                </div>
+                <h2 th:if="${vm.getKeyWord()}" th:text="${vm.getKeyWord()}"></h2>
+
+                <!--<button type="button" class="btn btn-primary" id="new-category" data-toggle="modal" style="margin-bottom: 20px" data-target="#exampleModalLong">-->
+                    <!--Add new Order-->
+                <!--</button>-->
+
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th colspan="1">
+                                        Index
+                                    </th>
+                                    <th colspan="2">
+                                        Customer name
+                                    </th>
+
+                                    <th colspan="2">
+                                        Phone
+                                    </th>
+                                    <th colspan="2">
+                                        Email
+                                    </th>
+                                    <th colspan="2">
+                                        Address
+                                    </th>
+                                    <th colspan="2">
+                                        Price
+                                    </th>
+                                    <th colspan="2">
+                                        Created Date
+                                    </th>
+                                    <th colspan="2">
+
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="order : ${vm.getOrderVMList()}">
+                                    <td colspan="1" th:text="${order.getId()}"></td>
+                                    <td colspan="2" th:text="${order.getCustomerName()}"></td>
+                                    <td colspan="2" th:text="${order.getPhoneNumber()}"></td>
+                                    <td colspan="2" th:text="${order.getEmail()}"></td>
+                                    <td colspan="2" th:text="${order.getAddress()}"></td>
+                                    <td colspan="2" th:text="${order.getPrice()}"></td>
+                                    <td colspan="2" th:text="${order.getCreatedDate()}"></td>
+
+                                    <td colspan="2">
+                                        <i class="mdi mdi-brightness-7 tooltip-test edit-order" th:attr="data-order = ${order.getId()}" data-toggle="modal" title="Edit product" data-target="#exampleModalLong" style="cursor: pointer"></i>
+                                        <a th:href="@{'/admin/product-image/' + ${order.getId()}}">
+                                            <i class="mdi mdi-folder-multiple-image tooltip-test" title="List images"></i>
+                                        </a>
+                                        <i class="mdi mdi-note-multiple-outline tooltip-test detail-order" th:attr="data-order = ${order.getId()}" data-toggle="modal" title="Detail order" data-target="#exampleModalLong2" style="cursor: pointer"></i>
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--<nav style="margin-top: 50px" aria-label="..." th:if="${vm.getCategoryVMList().size()>0}">-->
+                <!--<ul class="pagination">-->
+                <!--<th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">-->
+                <!--<li class="page-item active" th:if="${page.number == i}" aria-current="page">-->
+                <!--<a class="page-link" th:href="${''}" th:text="${i+1}"><span class="sr-only"></span></a>-->
+                <!--</li>-->
+                <!--<li class="page-item"  th:unless="${page.number == i}"><a class="page-link" th:text="${i+1}"-->
+                <!--th:href="${'?'-->
+                <!--+('&page='+i)-->
+                <!--+(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))-->
+                <!--+(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}"></a></li>-->
+                <!--</th:block>-->
+                <!--</ul>-->
+                <!--</nav>-->
+
+
+            </div>
+
+
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Add new/ update order</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+
+                            <div class="form-group margin-bottom-15" style="margin-top: 20px">
+                                <label>Customer name:</label>
+                                <input type="text" class="form-control" id="input-customer-name">
+                            </div>
+                            <div class="form-group margin-bottom-15" style="margin-top: 20px">
+                                <label>Phone:</label>
+                                <input type="text" class="form-control" id="input-phone">
+                            </div>
+                            <div class="form-group margin-bottom-15" style="margin-top: 20px">
+                                <label>Customer name:</label>
+                                <input type="text" class="form-control" id="input-email">
+                            </div>
+
+                            <div class="form-group margin-bottom-15" style="margin-top: 20px">
+                                <label>Address:</label>
+                                <input type="text" class="form-control" id="input-address">
+                            </div>
+
+
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary btn-save-order">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalLong2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle2">Detail order</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th colspan="1">Index</th>
+                                    <th colspan="4">Image</th>
+                                    <th colspan="3">Name</th>
+                                    <th colspan="2">Amount</th>
+                                    <th colspan="2">Price</th>
+                                </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                <!--<tr th:each="cartProduct,iter : ${vm.getCartProductVMS()}">-->
+                                    <!--<td colspan="1" th:text="${iter.index+1}" ></td>-->
+                                    <!--<td colspan="4">-->
+                                        <!--<a>-->
+                                            <!--<img style="width: auto; max-height: 250px;" th:src="${cartProduct.getMainImage()}">-->
+                                        <!--</a>-->
+                                    <!--</td>-->
+                                    <!--<td colspan="3"><a th:text="${cartProduct.getProductName()}"></a>-->
+                                        <!--<div style="margin-top: 180px;"><a style="cursor: pointer; color: red" class="delete-cart-product" th:attr="data-id=${cartProduct.getId()}">Delete</a></div>-->
+                                    <!--</td>-->
+                                    <!--<td colspan="2">-->
+                                        <!--<input type="number" th:value="${cartProduct.getAmount()}" class="form-control change-product-amount"   th:attr="data-id=${cartProduct.getId()}">-->
+                                    <!--</td>-->
+                                    <!--<td colspan="2" th:text="${cartProduct.getPrice()}+'$'"></td>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+
+                                </tbody>
+                                <tfoot>
+                                <!--<tr>-->
+                                    <!--<th colspan="10">Total price</th>-->
+                                    <!--<th colspan="2" th:text="${vm.getTotalPrice()}+'$'"></th>-->
+                                <!--</tr>-->
+                                </tfoot>
+                            </table>
+
+
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary btn-save-order">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer" th:replace="fragments/footer_admin :: footer_admin_info"></footer>
+
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.9.0/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+<script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+<script th:src="@{/js/off-canvas.js}"></script>
+<script th:src="@{/js/misc.js}"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script th:src="@{/js/admin-order.js}"></script>
+
+
+</body>
+</html>
